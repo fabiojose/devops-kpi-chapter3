@@ -1,0 +1,27 @@
+{
+  "name": "app-ex",
+  "version": "1.0.0",
+  "description": "App example using CloudEvents and Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabiojose/devops-kpi-chapter3.git"
+  },
+  "keywords": [
+    "cloudevents",
+    "express",
+    "devops",
+    "kpi"
+  ],
+  "author": "fabiojose@gmail.com",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@godaddy/terminus": "^4.1.2",
+    "cloudevents-sdk": "0.2.4",
+    "express": "^4.17.1"
+  }
+}
