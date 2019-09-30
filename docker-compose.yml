@@ -1,0 +1,91 @@
+version: '3'
+services:
+  grafana:
+    image: "grafana/grafana:6.2.5"
+    ports:
+      - "6001:3000"
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_ALLOW_ORG_CREATE=false
+    volumes:
+      - "grafana:/var/lib/grafana"
+    networks:
+      - labnet
+
+  jenkins:
+    build:
+      context: ./jenkins
+    image: "jenkins:devops-kpi"
+    environment:
+      - JENKINS_USER=admin
+      - JENKINS_PASS=admin
+    ports:
+      - "6002:8080"
+    volumes:
+      - "jenkins:/var/jenkins_home"
+    networks:
+      - labnet
+
+  influxdb:
+    image: "influxdb:1.5.4-alpine"
+    ports:
+      - "6003:8086"
+    environment:
+      - INFLUXDB_DB=jenkins
+      - INFLUXDB_USER=admin
+      - INFLUXDB_USER_PASSWORD=admin
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    volumes:
+      - "influxdb:/var/lib/influxdb"
+    networks:
+      - labnet
+
+  nifi:
+    image: "apache/nifi:1.9.2"
+    ports:
+      - "6004:6004"
+    environment:
+     - NIFI_WEB_HTTP_PORT=6004
+    networks:
+      - labnet
+
+  redis:
+    image: "redis:4-alpine"
+    volumes:
+      - "redis:/data"
+    networks:
+      - labnet
+
+  prometheus:
+    build:
+      context: ./prometheus
+    image: "prometheus:devops-kpi"
+    ports:
+      - "6005:9090"
+    networks:
+      - labnet
+
+  prometheus-blackbox:
+    image: "prom/blackbox-exporter:v0.14.0"
+    networks:
+      - labnet
+
+  app-ex:
+    build:
+      context: ./app-ex
+    image: "app-ex:devops-kpi"
+    ports:
+      - "6006:3000"
+    networks:
+      - labnet
+
+networks:
+  labnet:
+
+volumes:
+  grafana:
+  influxdb:
+  jenkins:
+  redis:
+  prometheus:
